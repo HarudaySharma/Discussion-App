@@ -31,3 +31,13 @@ app.use(cookieParser())
 
 app.use('/server/user', userRoutes);
 app.use('/server/auth', authRoutes);
+
+app.use((error, req, res, next) => {
+    const statusCode = error.statusCode || 500;
+    const message = error.message || "Internal Server Error";
+
+    res.status(statusCode).json({
+        success: false,
+        message: message,
+    });
+})

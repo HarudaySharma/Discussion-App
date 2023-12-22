@@ -2,7 +2,7 @@ import React from 'react'
 
 function About() {
   return (
-    <div>About</div>
+    <div className='text-3xl dark:text-white mx-auto'>About</div>
   )
 }
 

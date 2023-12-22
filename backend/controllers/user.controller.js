@@ -1,4 +1,7 @@
 import Subjects from "../models/subject.model.js";
+import errorHandler from "../utils/errorHandler.js";
+import Users from "../models/user.model.js";
+import hashGenerator from "../utils/hashGenerator.js";
 
 export const test = (req, res, next) => {
     console.log(req.body);
@@ -127,4 +130,34 @@ export const AddQuestion = async (req, res, next) => {
                     include
 
 */ 
+
+
+export const updateUser = async (req, res, next) => {
+    const {_id, username, name, email, password, profilePicture} = req.body;
+    if(req.user._id !== req.params.id) return next(errorHandler(400, "permission denied: user can only update their account"));
+
+    try {
+        const hash = hashGenerator(password);
+        const updatedUser = await Users.findByIdAndUpdate(req.params.id, {
+            username,
+            name,
+            email,
+            password: hash,
+            profilePicture
+        },
+        {new: true})
+        
+        // console.log(updatedUser._doc);
+        const {password: hashed, ...responseObj} = updatedUser._doc
+        res.status(200).json(responseObj);
+
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({"message": "Server errror, not able to update the user"});
+    } 
+
+
+
+}
 
