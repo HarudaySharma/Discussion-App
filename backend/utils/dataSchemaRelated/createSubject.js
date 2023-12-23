@@ -1,6 +1,6 @@
 import Subjects from "../../models/subject.model.js";
 
-function createSubject(name, question, author) {
+function createSubject(name, question, author, answers = []) {
     const Subject = new Subjects(
         {
             name,
@@ -8,7 +8,7 @@ function createSubject(name, question, author) {
             questionArray: [{
                 question,
                 authors: [author],
-                Answers: [],
+                answers,
             }]
         }
     )

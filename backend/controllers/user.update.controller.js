@@ -2,7 +2,7 @@ import Subjects from "../models/subject.model.js";
 import errorHandler from "../utils/errorHandler.js";
 import Users from "../models/user.model.js";
 import hashGenerator from "../utils/hashGenerator.js";
-
+import { addQuestion } from "./user.data.annexing.controller.js";
 
 export const updateUserCredentials = async (req, res, next) => {
     if (req.user._id !== req.params.id)
@@ -33,13 +33,30 @@ export const updateUserCredentials = async (req, res, next) => {
     }
 }
 
+
+
+/*
+* function: instead of updating the whole original object in the db, 
+*           it just updates the authors of the question by popping the username,
+*           and calls the addQuestion function to add a entirely new question based on the updated values by the user,
+            addQuestion will do all the response sending work
+
+* NOTE: If the authors array become empty after popping the username, means question have no authors
+        => question will be removed from the db;
+
+* Point to note -->  when new question is created, 
+               if(question is new to the subject):
+                    create object with the answers of older question
+                else:
+                    just add the author's name in the questions authors array
+*/
+
 export const updateUserQuestion = async (req, res, next) => {
     if (req.params.userId !== req.user._id)
         return next(errorHandler(400, "permission denied: user can only update their asked questions"));
 
     const { userId, subjectId, questionId } = req.params;
     const { question, username } = req.body;
-    // create a new question object, having the same old fields updating only the required fields.
     try {
         const subjectObj = await Subjects.findOne(
             {
@@ -47,20 +64,79 @@ export const updateUserQuestion = async (req, res, next) => {
                 'questionArray._id': questionId,
                 'questionArray.authors': username,
             },
-            {'questionArray.$': 1, "_id": 0}
+            { 'questionArray.$': 1, "_id": 0, "name": 1 }
         )
-        
-        const questionObj = subjectObj.questionArray[0];
 
-        // now to make a new questionObject and check if that question is already in the subject or not
-        // if yes then add the author to the question and if not add the new object into the questionArray
-        
-        console.log(questionObj);
-        res.status(200).json(questionObj)
+        if (subjectObj === null)
+            return next(errorHandler(400, "question not found in db"))
+
+        var questionObj = subjectObj.questionArray[0];
+
+        if (questionObj.question === question)
+            return res.status(400).json({ message: "you haven't changed the question" });
+
+
+        questionObj.authors = questionObj.authors.filter(value => value !== username);
+
+        req.body.subjectName = subjectObj.name;
+        req.body.answers = subjectObj.questionArray[0].answers.map((obj) => {
+            var result = {};
+            result.answer = obj.answer;
+            result.author = obj.author;
+            result.likes = obj.likes;
+            return result;
+        });
+
+        // adding the modified question as a new question in the subject
+        if (questionObj.authors.length === 0) {
+            //deleting the older question as no authors
+            const result = await Subjects.findOneAndUpdate(
+                {
+                    _id: subjectId,
+                    'questionArray._id': questionId
+                },
+                {
+                    $pull: {
+                        'questionArray': { _id: questionId }
+                    }
+                },
+                { new: true }
+            )
+
+            console.log("Question should be deleted", result)
+            // creating a new updated question object in the same subject
+            addQuestion(req, res, next);
+            return;
+        }
+
+        console.log("im here")
+        console.log(questionObj)
+
+        //updating the old question object with new one (one in which username is not in authors)
+        const result = await Subjects.findOneAndUpdate(
+            {
+                _id: subjectId,
+                'questionArray._id': questionId,
+                'questionArray.authors': username
+            },
+            {
+                $set: {
+                    'questionArray.$[q]': questionObj
+                },
+            },
+            {
+                arrayFilters: [{ 'q._id': questionId }],
+                new: true
+            }
+        )
+
+        console.log("username should not be in the authors", result)
+
+        addQuestion(req, res, next);
+
     }
     catch (err) {
         console.log(err);
         next(err);
     }
 }
-// question asked by user - > question of a subject .. many questions ..question id -> question select 

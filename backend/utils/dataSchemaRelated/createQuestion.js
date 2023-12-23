@@ -1,10 +1,10 @@
 
-function createQuestion(question, author) {
+function createQuestion(question, author, answers = []) {
     return (
         {
             question,
             authors: [author],
-            Answers: []
+            answers,
         }
     )
 }

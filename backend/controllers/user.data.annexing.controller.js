@@ -28,8 +28,8 @@ export const addQuestion = async (req, res, next) => {
     if (req.params.userId !== req.user._id)
         return next(errorHandler(401, "Authentication failed: Not allowed to add a Question"));
 
-    const { subjectName, question } = req.body;
-
+    const { subjectName, question, answers } = req.body;
+    console.log(answers)
     try {
 
         const { username } = await Users.findOne({ _id: req.user._id }, { "_id": 0, "username": 1 })
@@ -38,7 +38,7 @@ export const addQuestion = async (req, res, next) => {
         const Subject = await Subjects.findOne({ name: subjectName });
         if (!Subject) {
             console.log("New Subject")
-            const subject = createSubject(subjectName, question, username);
+            const subject = createSubject(subjectName, question, username, answers);
 
             try {
                 const sub = await subject.save();
@@ -61,13 +61,13 @@ export const addQuestion = async (req, res, next) => {
             let index = Subject.questionArray.findIndex(ele => ele.question === question);
             if (index === -1) {
                 console.log("new question")
-                Subject.questionArray.push(createQuestion(question, username))
+                Subject.questionArray.push(createQuestion(question, username, answers))
                 try {
-                    await Subject.save();
+                    const result = await Subject.save();
                     console.log("Question Added successfully")
-                    res.status(200).json("message: Question Added successfully");
+                    res.status(200).json(result.toObject());
                 } catch (err) {
-                    console.log(`${error}`, "check connectivity");
+                    console.log(`${err}`, "check connectivity");
                     res.status(501).json("message : could not connect to the db");
                 }
             }
@@ -78,13 +78,13 @@ export const addQuestion = async (req, res, next) => {
                     Subject.questionArray[index].authors.push(username);
 
                     try {
-                        await Subject.save();
+                        const result = await Subject.save();
                         console.log("Author added successfully")
-                        res.status(200).json("message: Question Added successfully");
+                        res.status(200).json(result.toObject());
                         return;
                     }
                     catch (err) {
-                        console.log(`${error}`, "check connectivity");
+                        console.log(`${err}}`, "check connectivity");
                         res.status(501).json("message : could not connect to the db");
                         return;
                     }
