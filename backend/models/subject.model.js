@@ -20,14 +20,14 @@ const SubjectSchema = new mongoose.Schema(
                         },
                         author: String,
                         likes: Number,
-
                     }
                 ]   
             }
         ]
     }
 )
+SubjectSchema.index({ 'questionArray.answers.answer': 1 }, { sparse: true });
 
 const Subjects = mongoose.model('Subject', SubjectSchema);
 
-export default Subjects;
+export default Subjects;    

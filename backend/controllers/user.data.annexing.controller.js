@@ -41,11 +41,13 @@ export const addQuestion = async (req, res, next) => {
             const subject = createSubject(subjectName, question, username, answers);
 
             try {
+                console.log(subject);
                 const sub = await subject.save();
                 console.log("new Subject added");
                 res.status(200).json(sub)
 
             } catch (error) {
+                console.log(error);
                 console.log("not able to add new Subject")
                 res.status(500).json("message: not able to add new question with new Subject");
             }
