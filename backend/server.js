@@ -2,9 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import userRoutes from "./routes/user.routes.js"
-import authRoutes from "./routes/auth.route.js"
-import dataRoutes from './routes/data.routes.js'
+import userRoutes from "./routes/user/user.routes.js"
+import authRoutes from "./routes/auth/auth.route.js"
+import dataRoutes from './routes/data/data.routes.js'
 //connecting to the db
 dotenv.config();
 mongoose.connect(process.env.MONGO)

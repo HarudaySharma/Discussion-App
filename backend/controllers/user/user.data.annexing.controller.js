@@ -1,8 +1,8 @@
-import Subjects from "../models/subject.model.js";
-import Users from "../models/user.model.js";
+import Subjects from "../../models/subject.model.js";
+import Users from "../../models/user.model.js";
 
-import createSubject from "../utils/dataSchemaRelated/createSubject.js";
-import createQuestion from "../utils/dataSchemaRelated/createQuestion.js";
+import createSubject from "../../utils/data/createSubject.js";
+import createQuestion from "../../utils/data/createQuestion.js";
 
 
 /*

@@ -1,5 +1,5 @@
 import express from "express"
-import { addQuestion, addResponseToQuestion, likeResponseOfQuestion } from "../controllers/user.data.annexing.controller.js"
+import { addQuestion, addResponseToQuestion, likeResponseOfQuestion } from "../../controllers/user/user.data.annexing.controller.js"
 
 
 const router = express.Router();

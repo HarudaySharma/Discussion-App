@@ -1,5 +1,5 @@
-import Subjects from "../models/subject.model.js"
-import errorHandler from "../utils/errorHandler.js";
+import Subjects from "../../models/subject.model.js"
+import errorHandler from "../../utils/error/errorHandler.js";
 
 
 export const allData = async (req, res, next) => {

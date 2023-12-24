@@ -1,6 +1,6 @@
 import express from "express";
-import { test, SignUp, SignIn, googleSignIn, SignOut } from "../controllers/auth.controller.js";
-import signInVia from "../utils/signInVia.js";
+import { test, SignUp, SignIn, googleSignIn, SignOut } from "../../controllers/auth/auth.controller.js";
+import signInVia from "../../utils/users/signInVia.js";
 
 const router = express.Router();
 

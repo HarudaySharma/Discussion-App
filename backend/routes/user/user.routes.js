@@ -2,8 +2,8 @@ import express from "express";
 import userDataAnnexing from "./user.data.annexing.routes.js"
 import userUpdate from './user.update.routes.js'
 import userDataRetrieve from  './user.retrieve.routes.js'
-import { test } from "../controllers/user.controller.js";
-import verifyToken from "../utils/verifyToken.js"
+import { test } from "../../controllers/user/user.controller.js";
+import verifyToken from "../../utils/users/verifyToken.js"
 
 const router = express.Router();
 

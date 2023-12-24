@@ -1,5 +1,5 @@
-import Subjects from "../models/subject.model.js";
-import Users from "../models/user.model.js";
+import Subjects from "../../models/subject.model.js";
+import Users from "../../models/user.model.js";
 
 
 export const questions = async (req, res, next) => {

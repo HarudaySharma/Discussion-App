@@ -1,11 +1,10 @@
-import { json } from "express";
-import Users from "../models/user.model.js";
-import hashGenerator from "../utils/hashGenerator.js";
-import generateToken from "../utils/generateToken.js";
-import errorHandler from "../utils/errorHandler.js";
-import comparePasword from "../utils/comparePassword.js";
-import generateUID from "../utils/generateUID.js";
-import generatePassword from "../utils/generatePassword.js";
+import Users from "../../models/user.model.js";
+import hashGenerator from "../../utils/users/hashGenerator.js";
+import generateToken from "../../utils/users/generateToken.js";
+import errorHandler from "../../utils/error/errorHandler.js";
+import comparePasword from "../../utils/users/comparePassword.js";
+import generateUID from "../../utils/users/generateUID.js";
+import generatePassword from "../../utils/users/generatePassword.js";
 
 export const test = (req, res, next) => {
     console.log(req.body);

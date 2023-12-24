@@ -1,10 +1,10 @@
-import Subjects from "../models/subject.model.js";
-import errorHandler from "../utils/errorHandler.js";
-import Users from "../models/user.model.js";
-import hashGenerator from "../utils/hashGenerator.js";
+import Subjects from "../../models/subject.model.js";
+import errorHandler from "../../utils/error/errorHandler.js";
+import Users from "../../models/user.model.js";
+import hashGenerator from "../../utils/users/hashGenerator.js";
 import { addQuestion } from "./user.data.annexing.controller.js";
-import removeAuthorFromQuestion from "../utils/removeAuthorFromQuestion.js";
-import authorInQuestionArray from "../utils/authorInQuestionArray.js";
+import removeAuthorFromQuestion from "../../utils/data/removeAuthorFromQuestion.js";
+import authorInQuestionArray from "../../utils/data/authorInQuestionArray.js";
 
 export const updateUserCredentials = async (req, res, next) => {
     if (req.user._id !== req.params.id)

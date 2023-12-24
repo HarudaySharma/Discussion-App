@@ -2,7 +2,7 @@ import express from "express"
 import {
     updateUserCredentials, updateUserQuestion, updateUserAnswer,
     deleteUserQuestion, deleteUserAnswer
-} from "../controllers/user.update.controller.js";
+} from "../../controllers/user/user.update.controller.js";
 
 
 const router = express.Router();
