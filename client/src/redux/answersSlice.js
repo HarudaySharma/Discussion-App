@@ -49,7 +49,6 @@ const answersSlice = createSlice({
         },
         modifyLikeOfAnswer: (state, action) => {
             let i = state.answers.findIndex((obj) => obj.answer === action.payload.answer);
-            console.log(action, i)
             action.payload.liked && i !== -1 ? state.answers.at(i).likes.push(state.meta.userId) : state.answers.at(i).likes.pop();
         },
         emptyAnswersState: (state) => {

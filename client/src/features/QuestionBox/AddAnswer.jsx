@@ -91,7 +91,6 @@ function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
         setAnswer('');
 
     }
-    console.log(answer);
     return (
 
         Boolean(currentUser) && <DialogBox

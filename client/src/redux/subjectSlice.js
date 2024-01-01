@@ -7,7 +7,7 @@ const subjectSlice = createSlice({
     initialState,
     reducers: {
         populateSubjects: (state, action) => {
-            console.log(action.payload);
+            // console.log(action.payload);
             return action.payload;
         },
 
@@ -15,7 +15,7 @@ const subjectSlice = createSlice({
             if (!action.payload.subject) return;
             let index = state.findIndex((subject) => subject._id === action.payload.subject._id)
             // new subject added ? or old is to be modified 
-            console.log(index);
+            // console.log(index);
             index === -1 ? state.push(action.payload.subject) : state.splice(index, 1, action.payload.subject);
 
         },

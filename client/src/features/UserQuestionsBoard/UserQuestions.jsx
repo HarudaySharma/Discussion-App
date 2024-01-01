@@ -29,7 +29,7 @@ const UserQuestions = ({ className }) => {
                 if (!data?.length) {
                     snackBar({ customPurple: true, message: "No User Questions Found", timeout: 4000});
                 }
-                console.log(data);
+                // console.log(data);
             }
             catch (err) {
                 snackBar({ error: true, message: "Request Error" })

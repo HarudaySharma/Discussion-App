@@ -36,7 +36,6 @@ const QuestionFocus = ({ className }) => {
         }
 
         try {
-            console.log(updateQuestion);
             const res = await fetch(`/server/user/update/question/${subject.subjectId}/${question._id}/${currentUser._id}`, {
                 method: 'PUT',
                 headers: {
