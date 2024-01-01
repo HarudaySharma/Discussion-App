@@ -6,6 +6,8 @@ import userRoutes from "./routes/user/user.routes.js"
 import authRoutes from "./routes/auth/auth.route.js"
 import dataRoutes from './routes/data/data.routes.js'
 
+import path from 'path';
+
 //connecting to the db
 dotenv.config();
 mongoose.connect(process.env.MONGO)
@@ -16,6 +18,9 @@ mongoose.connect(process.env.MONGO)
         console.log("database not connected", error);
     })
 
+const __dirname = path.resolve();
+
+
 // starting the app 
 const app = express();
 const PORT = 3000;
@@ -23,6 +28,14 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log("server listening on port: 3000");
 })
+
+app.use(express.static(path.join(__dirname, 'client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
+
+
 
 app.use(express.json());
 app.use(cookieParser())
