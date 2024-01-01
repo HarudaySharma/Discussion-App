@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.breakWord {
+    overflow-wrap: break-word;
+    /* text-align: justify ; */
+}
+
+.textBalance {
+    text-wrap: balance;
+}

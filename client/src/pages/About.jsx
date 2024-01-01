@@ -2,7 +2,8 @@ import React from 'react'
 
 function About() {
   return (
-    <div className='text-3xl dark:text-white mx-auto'>About</div>
+    <main className='mx-auto bg-gray10 max-w-7xl flex flex-col items-center'>
+    </main>
   )
 }
 

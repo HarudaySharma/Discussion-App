@@ -12,49 +12,69 @@ export const updateUserCredentials = async (req, res, next) => {
 
 
     const { username, name, email, password, profilePicture } = req.body;
-
     try {
         const oldCred = await Users.findById(req.params.id, { username: 1, _id: 0 })
         console.log("oldCred", oldCred);
 
 
-        if (oldCred.username !== username) {
+        if (oldCred.username !== username.trim()) {
             try {
-                const subjectsUpdated = await updateAuthorNameInSubjects(oldCred.username, username)
+                const subjectsUpdated = await updateAuthorNameInSubjects(oldCred.username, username.trim())
 
                 if (subjectsUpdated !== true) {
-                    res.status(500).json({ message: 'subjectUpdationErrors error' });
+                    res.status(500).json({ message: 'Internal Server Error' });
                     return;
                 }
             }
             catch (err) {
                 console.log(err);
-                res.status(500).json({ message: 'internal server error' });
+                res.status(500).json({ message: 'Internal Server Error' });
                 return;
             }
         }
 
-        const hash = hashGenerator(password);
+
+        const hash = password ? hashGenerator(password.trim()) : null;
+
         const updatedUser = await Users.findByIdAndUpdate(req.params.id, {
-            username,
-            name,
-            email,
-            password: hash,
-            profilePicture
+            username: (username ? username.trim() : oldCred.username),
+            name: (name ? name.trim() : oldCred.name),
+            email: (email ? email.trim() : oldCred.email),
+            password: (hash ? hash : oldCred.password),
+            profilePicture: (profilePicture ? profilePicture : oldCred.profilePicture),
         },
             { new: true })
 
-        // console.log(updatedUser._doc);
+        console.log(updatedUser._doc);
         const { password: hashed, ...responseObj } = updatedUser._doc
-
+        console.log(responseObj);
         res.status(200).json(responseObj);
 
 
-    } catch (err) {
-        console.log(err)
+    } catch (error) {
+        console.log(error)
+        if (error.message.includes("E11000")) {
+            res.status(500).json({ message: `${Object.keys(error.keyPattern)[0]} already taken` })
+            return;
+        }
         res.status(500).json({ "message": "Server errror, not able to update the user" });
+        return;
     }
 }
+
+export const deleteUser = async (req, res, next) => {
+    if (req.user._id !== req.params.id) {
+        return next(errorHandler(401, "You can Delete only your account"))
+    }
+    try {
+        await Users.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: "User has been deleted..." });
+    }
+    catch (err) {
+        next(err);
+    }
+
+};
 
 const updateAuthorNameInSubjects = async (username, newName) => {
     console.log(username, newName)
@@ -67,11 +87,11 @@ const updateAuthorNameInSubjects = async (username, newName) => {
 
         );
         console.log("subjects", subjects);
-        
-        if(!subjects.length) {
+
+        if (!subjects.length) {
             return true;
         }
-        
+
         subjects.forEach((subject) => {
             let authorPresent = false;
 
@@ -144,6 +164,7 @@ export const updateUserQuestion = async (req, res, next) => {
 
     const { userId, subjectId, questionId } = req.params;
     const { question, username } = req.body;
+
     try {
         const subjectObj = await Subjects.findOne(
             {
@@ -155,12 +176,12 @@ export const updateUserQuestion = async (req, res, next) => {
         )
 
         if (subjectObj === null)
-            return next(errorHandler(400, "question not found in db"))
+            return next(errorHandler(400, "Question not found in db"))
 
         var questionObj = subjectObj.questionArray[0];
 
-        if (questionObj.question === question)
-            return res.status(400).json({ message: "you haven't changed the question" });
+        if (questionObj.question === question?.trim())
+            return res.status(400).json({ message: "You haven't changed the question" });
 
 
         questionObj.authors = questionObj.authors.filter(value => value !== username);
@@ -196,7 +217,6 @@ export const updateUserQuestion = async (req, res, next) => {
             return;
         }
 
-        console.log("im here")
         console.log(questionObj)
 
         //updating the old question object with new one (one in which username is not in authors)
@@ -229,12 +249,13 @@ export const updateUserQuestion = async (req, res, next) => {
 }
 
 export const updateUserAnswer = async (req, res, next) => {
+    
     if (req.params.userId !== req.user._id)
         return next(errorHandler(400, "permission denied: user can only update their wrote answers"));
 
     const { userId, subjectId, questionId, answerId } = req.params;
     const { answer, author } = req.body;
-
+    console.log(answer);
     try {
         const { username } = await Users.findById(userId, { username: 1, _id: 0 })
 
@@ -259,13 +280,15 @@ export const updateUserAnswer = async (req, res, next) => {
                         { 'a._id': answerId }
                     ],
                     new: true,
-                }
+                },
             );
+            console.log(result)
             if (result === null) {
-                return next(errorHandler(400, "you didn't changed your answer"))
+                return next(errorHandler(400, "You didn't changed your answer"))
             }
             console.log(result.toObject());
             res.status(200).json(result.toObject());
+
         }
         catch (err) {
             next(err);
@@ -323,8 +346,8 @@ export const deleteUserQuestion = async (req, res, next) => {
 
             if (subject.questionAskers.length == 0) {
                 // remove the subject
-                const result = await Subjects.findOneAndDelete({ _id: subjectId });
-                return res.status(200).json(result)
+                const result = await Subjects.findOneAndDelete({ _id: subjectId }, { new: true });
+                return res.status(200).json({ subject: { _id: subjectId }, deleteSubject: true })
             }
 
             try {
@@ -341,12 +364,14 @@ export const deleteUserQuestion = async (req, res, next) => {
                 )
 
                 console.log("authors should be deleted", result);
+                res.set('content-type', 'application/json');
+                res.status(200).json({ subject: result.toObject(), deleteSubject: false });
             }
             catch (err) {
                 console.log(err);
+                res.status(501).json({ message: "Failed to Delete" });
+
             }
-            // console.log(result);
-            res.status(200).json(result.toObject());
 
         }
         catch (err) {

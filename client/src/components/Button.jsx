@@ -1,20 +1,23 @@
-import React from 'react'
+import React, { Children } from 'react'
 
 function Button({
     inputBtn,
     type,
     value,
     onClickFnc,
+    disabled,
     className,
+    children,
 }) {
     return (
         inputBtn
             ?
-            <input type={type} value={value} onClick={onClickFnc} className={`bg-red-500 text-white ${className}`} />
+            <input type={type} value={value} onClick={onClickFnc} disabled={disabled} className={`${className}`} />
             :
-            <button type={type} value={value} onClick={onClickFnc} className={className}>
-                {value}
-            </button>
+                <button type={type} value={value} onClick={onClickFnc} disabled={disabled} className={className}>
+                    {value}
+                    {children}
+                </button>
     )
 }
 

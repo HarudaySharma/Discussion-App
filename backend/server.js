@@ -29,9 +29,9 @@ app.use(cookieParser())
 
 // middleware functions for user and auth routes
 
-app.use('/server/auth', authRoutes);
-app.use('/server/user', userRoutes);
-app.use('/server/data', dataRoutes);
+app.use('/server/auth/', authRoutes);
+app.use('/server/user/', userRoutes);
+app.use('/server/data/', dataRoutes);
 
 app.use((error, req, res, next) => {
     const statusCode = error.statusCode || 500;

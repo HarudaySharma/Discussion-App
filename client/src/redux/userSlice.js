@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     currentUser: null,
@@ -58,10 +58,6 @@ const userSlice = createSlice({
             state.error = false;
             state.currentUser = null;
         },
-
-
-
-
     }
 })
 

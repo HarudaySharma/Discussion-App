@@ -19,7 +19,7 @@ const SubjectSchema = new mongoose.Schema(
                             unique: true,
                         },
                         author: String,
-                        likes: Number,
+                        likes: [],
                     }
                 ]   
             }

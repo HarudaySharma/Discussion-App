@@ -1,32 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 
-const {question, authors, Answers} = useSelector((state) => state.question)
-
-const initialState = {
-    subject: null,
-    questionAskers: [],
-    questionArray: [
-        {
-            question,
-            authors,
-            Answers
-        }
-    ]
-}
+const initialState = []
 
 const subjectSlice = createSlice({
     name: "subject",
     initialState,
     reducers: {
-        createNewQuestion: (state, action) => {
-            state.subject = action.payload;
-            state.questionArray.push(action.payload.question);
+        subjectFetchStart: (state) => {
+            
+        },
+        populateSubjects: (state, action) => {
+            console.log(action.payload);
+            return action.payload;
+        },
+        subjectFetchFail: (state) => {
+
+        },
+        updateSubject: (state, action) => {
+            if (!action.payload.subject) return;
+            let index = state.findIndex((subject) => subject._id === action.payload.subject._id)
+            // new subject added ? or old is to be modified 
+            console.log(index);
+            index === -1 ? state.push(action.payload.subject) : state.splice(index, 1, action.payload.subject);
+
+        },
+        updateSubjectQuestion: (state, action) => {
+            const {newSubject} = action.payload
+            state.splice(state.findIndex(sub => sub._id === newSubject._id), 1, newSubject);
+        
+        },
+        deleteSubject: (state, action) => {
+            state.splice(state.findIndex(subject => subject._id === action.payload.subject._id), 1)
         }
     }
 })
 
+// export const allSubjects = useSelector((state) => state.subjects);
 
-export const {createNewQuestion} = subjectSlice.actions;
+
+export const { populateSubjects, updateSubject, updateSubjectQuestion, deleteSubject } = subjectSlice.actions;
 
 export default subjectSlice.reducer;

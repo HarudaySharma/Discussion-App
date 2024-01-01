@@ -1,20 +1,30 @@
 import React from 'react'
 
 function InputContainer({
-    type,
-    value,
-    labelValue,
-    name,
-    id,
-    disabled,
-    required,
-    onChangeFnc,
-    className
+  type,
+  value,
+  defaultValue,
+  labelValue,
+  labelAdd,
+  placeholder,
+  name,
+  id,
+  disabled,
+  required,
+  onChangeFnc,
+  onFocusFnc,
+  onBlurFnc,
+  fieldSetClassnames,
+  labelClassnames,
+  inputClassNames,
+  readOnly,
+  children,
 }) {
   return (
-    <fieldset className='flex flex-col gap-4 items-start'>
-        <label htmlFor={id} className='uppercase'>{labelValue}</label>
-        <input type={type} value={value} name={name} id={id} onChange={onChangeFnc} disabled={disabled} required={required}  className={className}/>
+    <fieldset className={`${fieldSetClassnames}`}>
+      {labelAdd && <label htmlFor={id} className={`text-sm ${labelClassnames}`}>{labelValue}</label>}
+      <input defaultValue={defaultValue} readOnly={readOnly} type={type} value={value} name={name} id={id} onBlur={onBlurFnc} onFocus={onFocusFnc} onChange={onChangeFnc} placeholder={placeholder} disabled={disabled} required={required} className={`${inputClassNames}`} />
+      {children}
     </fieldset>
   )
 }

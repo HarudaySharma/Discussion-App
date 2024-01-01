@@ -13,29 +13,34 @@ export const test = (req, res, next) => {
 
 
 export const SignUp = async (req, res, next) => {
+    
     const { username, name, email, password } = req.body;
 
     const hash = hashGenerator(password);
     const newUser = new Users(
         {
             username,
-            name,
+            name: name ? name : username,
             email,
             password: hash,
         }
     )
     try {
         await newUser.save();
-        res.status(200).json(`message: user created successfully, statement`)
+        res.status(200).json({ message: "User created successfully" })
     } catch (error) {
-        res.status(500).json(`${error}`)
+        console.log(error.keyPattern)
+        if (error.message.includes("E11000")) {
+            res.status(500).json({ message: `${Object.keys(error.keyPattern)[0]} already taken` })
+            return;
+        }
+        res.status(500).json({ message: "Internal Server Error" })
     }
 
 }
 
 export const SignIn = async (req, res, next) => {
     const { username, email, password } = req.body;
-
     try {
 
         var User = null;
@@ -44,7 +49,8 @@ export const SignIn = async (req, res, next) => {
                 User = await Users.findOne({ username });
             } catch (err) {
                 console.log(err);
-                res.status(500).json(`${err}`);
+                res.status(500).json({message: "User not found"});
+                return;
             }
         }
         else {
@@ -52,7 +58,8 @@ export const SignIn = async (req, res, next) => {
                 User = await Users.findOne({ email });
             } catch (err) {
                 console.log(err);
-                res.status(500).json(`${err}`);
+                res.status(500).json({message: "User not Found"});
+                return;
             }
         }
         if (!User) {
@@ -78,15 +85,16 @@ export const SignIn = async (req, res, next) => {
 }
 
 export const googleSignIn = async (req, res, next) => {
-    const { username, email } = req.body;
+    const { username, email, profilePicture } = req.body;
     try {
-        const user = await Users.findOne({ username });
+        const user = await Users.findOne({ email });
         if (user) {
             const token = generateToken(user._id);
             const { password, ...responseObj } = user._doc;
             res
                 .cookie('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 2 })
-                .status(200), json(responseObj);
+                .status(200)
+                .json(responseObj);
             return;
         }
         //create new user
@@ -94,20 +102,24 @@ export const googleSignIn = async (req, res, next) => {
             username: username + generateUID(),
             name: username,
             email,
-            password: generatePassword(16),
+            password: hashGenerator(generatePassword(16)),
+            profilePicture,
         })
 
         try {
+            console.log(newUser);
             await newUser.save();
             const token = generateToken(newUser._id);
             const { password, ...responseObj } = newUser._doc;
             res
                 .cookie('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 2 })
-                .status(200), json(responseObj);
+                .status(200)
+                .json(responseObj);
             return;
         }
         catch (err) {
-            next(errorHandler(500, "not able to add user to db"))
+            console.log(err);
+            next(errorHandler(500, "Not able to add user to db"))
         }
 
     } catch (err) {

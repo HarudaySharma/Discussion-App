@@ -1,32 +1,52 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
-import {useSelector} from "react-redux"
+import { createSlice } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 
-const {answer, author, likes} = useSelector((state) => state.answer)
 
-const initialState = {
-    question: "",
-    authors: [],
-    Answers: [
-        {
-            answer,
-            author,
-            likes,
-        }
-    ]
-}
+const initialState = {}
 
 const questionSlice = createSlice({
     name: "question",
     initialState,
     reducers: {
-        addQuestion: (state, action) => {
-            state.question = action.payload;
-            state.authors.push(action.payload);
-            state.Answers = action.payload;
+        populateQuestion: {
+            reducer(state, action) {
+                // console.log(action.payload);
+                return action.payload;
+            },
+            prepare(data, meta) {
+                return {
+                    payload: {
+                        subject: meta,
+                        question: data,
+                    },
+                }
+            }
+        },
+        deleteQuestionAuthor: (state, action) => {
+            state.question.authors.splice(state.question.authors.findIndex((name) => name === action.payload.author), 1)
+        },
+        updateQuestion: (state, action) => {
+            state.question.question = action.payload.question
+        },
+        addNewAnswers: (state, action) => {
+            state.question.answers.push(action.payload.answers);
+        },
+        updateAnswers :(state, action) => {
+            state.question.answers = action.payload.answers;
+        },
+        removeAnswer: (state, action) => {
+            state.question.answers.splice(state.question.answers.findIndex((obj) => obj.answer === action.payload.answer), 1)
+
+        }
+        ,
+        emptyQuestion: (state) => {
+            return {};
         }
     }
 })
 
-export const {addQuestion} = questionSlice.actions;
+// export const currentQuestion = useSelector((state) => state.question); 
+
+export const { populateQuestion, deleteQuestionAuthor, updateQuestion, updateAnswers,removeAnswer,  emptyQuestion} = questionSlice.actions;
 
 export default questionSlice.reducer;

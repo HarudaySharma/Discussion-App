@@ -1,8 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from "./userSlice"
-import subjectReducer from "./subjectSlice"
+import subjectsReducer from "./subjectSlice"
 import questionReducer from "./questionSlice"
-import answerReducer from "./answerSlice"
+import answersReducer from "./answersSlice"
 
 import { persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
@@ -20,18 +20,24 @@ const persistedUserReducer = persistReducer(persistUserConfig, userReducer);
 
 
 // other Slices will not be persisted so they will populate every time the app starts
-const rootReducer = combineReducers({
-    user: persistedUserReducer,
-    // subject: subjectReducer,
-    // question: questionReducer,
-    // answer: answerReducer
-})
+// const rootReducer = combineReducers({
+//     user: persistedUserReducer,
+//     subjects: subjectReducer,
+//     question: questionReducer,
+//     answer: answerReducer
+// })
 
 export const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => {
-        getDefaultMiddleware({serializableCheck: false})
-    }
+    reducer: {
+        user: persistedUserReducer,
+        subjects: subjectsReducer,
+        question: questionReducer,
+        answers: answersReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware(
+            { serializableCheck: false }
+        )
 });
 
 export const persistor = persistStore(store);

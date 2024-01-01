@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const verifyToken = (req, res, next) => {
     const { access_token } = req.cookies;
     if(!access_token) {
-        return res.status(400).json({ "message": "permission denied: 'NO ACCESS_TOKEN'" })
+        return res.status(400).json({ "accessToken": false })
     }
     try {
         const decoded = jwt.verify(access_token, process.env.JWT_SECRET);

@@ -16,15 +16,16 @@ export const questions = async (req, res, next) => {
         const subjs = await Subjects.find({
             questionAskers: username
         })
-        
+
         const result = subjs.map((subject) => {
-            subject.questions = subject.questionArray.filter((obj) => obj.authors.includes(username))
-            return subject;
-            
-        })
+            subject.questionArray = subject.questionArray.filter((obj) => obj.authors.includes(username))
 
+            return subject.questionArray.length ? subject : null;
+
+        }).filter(Boolean);
+        
         console.log(result);
-
+        res.set('content-type', 'application/json');
         res.status(200).json(result);
     }
     catch (err) {
