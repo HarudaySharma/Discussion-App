@@ -33,13 +33,13 @@ export const addQuestion = async (req, res, next) => {
     console.log(answers)
     try {
 
-        const { username } = await Users.findOne({ _id: req.user._id }, { "_id": 0, "username": 1 })
+        const { username, profilePicture } = await Users.findOne({ _id: req.user._id }, { "_id": 0, "username": 1, "profilePicture": 1 })
         console.log("username: " + username);
 
         const Subject = await Subjects.findOne({ name: subjectName?.trim() });
         if (!Subject) {
             console.log("New Subject")
-            const subject = createSubject(subjectName?.trim(), question?.trim(), username, answers);
+            const subject = createSubject(subjectName?.trim(), question?.trim(), {username, profilePicture}, answers);
 
             try {
                 console.log(subject);
@@ -64,7 +64,7 @@ export const addQuestion = async (req, res, next) => {
             let index = Subject.questionArray.findIndex(ele => ele.question === question.trim());
             if (index === -1) {
                 console.log("new question")
-                Subject.questionArray.push(createQuestion(question.trim(), username, answers))
+                Subject.questionArray.push(createQuestion(question.trim(), {username, profilePicture}, answers))
                 try {
                     const result = await Subject.save();
                     console.log("Question Added successfully")
@@ -76,9 +76,9 @@ export const addQuestion = async (req, res, next) => {
             }
             else {
                 console.log("question found")
-                if (!Subject.questionArray[index].authors.find(ele => ele === username)) {
+                if (!Subject.questionArray[index].authors.find(ele => ele.username === username)) {
                     console.log("new Author for the question")
-                    Subject.questionArray[index].authors.push(username);
+                    Subject.questionArray[index].authors.push({username, profilePicture});
 
                     try {
                         const result = await Subject.save();
@@ -111,7 +111,7 @@ export const addResponseToQuestion = async (req, res, next) => {
     // console.log(req.body)
     const { subjectId, questionId, userId } = req.params;
     try {
-        const { username } = await Users.findById(userId, { "username": 1, "_id": 0 });
+        const { username } = await Users.findById(userId, { "username": 1, "_id": 0, });
         console.log(username);
         /* this will find the subject and then the specific question inside it,
          and then adds the answer into the answer array of the question if not present already

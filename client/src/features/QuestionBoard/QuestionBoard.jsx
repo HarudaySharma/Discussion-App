@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from 'react'
-import Subject from './Subject.jsx';
+
+import { useDispatch, useSelector } from "react-redux";
 import { populateSubjects } from '../../redux/subjectSlice.js'
+
+import Subject from './Subject.jsx';
 import * as Accordion from '@radix-ui/react-accordion';
 import snackBar from "../../components/snackBar.js"
 
 
 const QuestionBoard = ({ className }) => {
   const dispatch = useDispatch();
-
-
 
   useEffect(() => {
 

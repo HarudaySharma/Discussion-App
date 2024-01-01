@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
+import { updateSubject } from "../../redux/subjectSlice.js"
+import { updateQuestion } from '../../redux/questionSlice.js'
+
 import AuthorList from './AuthorList';
 import AnswerList from './AnswerList';
 import AddAnswer from './AddAnswer';
 import DeleteQuestion from '../../components/DeleteQuestion';
 import DialogBox from '../../components/DialogBox';
-import { updateSubject } from "../../redux/subjectSlice"
-import { updateQuestion } from '../../redux/questionSlice'
-import snackBar from '../../components/snackBar';
+import snackBar from '../../components/snackBar.js';
+
+
 
 const QuestionFocus = ({ className }) => {
     const dispatch = useDispatch();
@@ -15,6 +19,7 @@ const QuestionFocus = ({ className }) => {
     const { answers, meta } = useSelector(state => state.answers);
     const { currentUser } = useSelector((state) => state.user);
     const [updatedQuestion, setUpdatedQuestion] = useState('');
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     // useEffect(() => {
     //     console.log("questionFocus mounted");
@@ -22,10 +27,9 @@ const QuestionFocus = ({ className }) => {
     //         console.log("questionFocus unmounted");
     //     }
     // }, [])
-
-
     const handleQuestionUpdate = async (e) => {
         e.preventDefault();
+        setDialogOpen(false);
         if (updatedQuestion?.trim() === question.question || updatedQuestion === '') {
             snackBar({ customGray: true, message: "Question not changed" });
             return;
@@ -60,12 +64,12 @@ const QuestionFocus = ({ className }) => {
         }
     }
     const isUsersQuestion = () => {
-        return question.authors.includes(currentUser?.username) ? true : false;
+        return Boolean(question.authors.find((author) => author.username === currentUser?.username))
     }
     // console.log("QuestionFocus");
     return (
         subject &&
-        <main className={` ${className}   bg-gray8  text-center  outline outline-violet9 hover:outline-violet10  rounded-[4px]`}>
+        <main className={` ${className} selection:bg-violet5  bg-gray8  text-center  outline outline-violet9 hover:outline-violet10  rounded-[4px]`}>
             <section className='text-left pt-2 flex flex-col flex-wrap gap-4'>
                 <section className=' mx-2 flex flex-col '>
                     <label htmlFor="subjectName" className='mb-1 text-[12px] uppercase tracking-wider text-gray11 shadow-violet8'>subject</label>
@@ -87,6 +91,8 @@ const QuestionFocus = ({ className }) => {
                     <section className='gap-3 mx-4 py-2 grow flex justify-left items-center flex-row flex-wrap'>
                         {isUsersQuestion() &&
                             <DialogBox
+                                open={dialogOpen}
+                                onOpenChange={setDialogOpen}                                
                                 dialogDescription={`Make changes to your question here. Click save when you're done.`}
                                 dialogTitle={'Edit Question'}
                                 onSaveChanges={handleQuestionUpdate}
@@ -122,7 +128,7 @@ const QuestionFocus = ({ className }) => {
                         </label>
                         <AuthorList
                             authors={question.authors}
-                            className='mx-3 w-fit max-w-md flex flex-wrap gap-1  rounded-[4px]  focus:shadow-[0_0_0_2px] shadow-[0_0_0_1px] outline outline-violet9 shadow-violet11 px-4 py-2 '
+                            className='mx-3 w-fit max-w-md flex flex-wrap gap-2  rounded-[4px]  focus:shadow-[0_0_0_2px] shadow-[0_0_0_1px] outline outline-violet9 shadow-violet11 px-4 py-2 '
                             questionId={question._id}
                         />
                     </section>

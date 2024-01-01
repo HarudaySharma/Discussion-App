@@ -1,12 +1,18 @@
 import React, { useState, useCallback } from 'react'
-import { Link } from 'react-router-dom';
-import { InputContainer, Button, OAuth } from '../components'
-import { signInFailure, signInStart, signInSuccess } from '../redux/userSlice.js'
+import { Link, useNavigate } from 'react-router-dom';
+
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { signInFailure, signInStart, signInSuccess } from '../redux/userSlice.js'
+
+import  InputContainer from '../components/InputContainer.jsx'
+import  Button from '../components/Button.jsx'
+import  OAuth from '../components/OAuth.jsx'
+import snackBar from "../components/snackBar.js";
+
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
-import snackBar from "../components/snackBar.js";
+
+
 
 function SignIn() {
   const navigate = useNavigate();

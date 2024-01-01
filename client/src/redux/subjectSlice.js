@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
 
 const initialState = []
 
@@ -7,16 +6,11 @@ const subjectSlice = createSlice({
     name: "subject",
     initialState,
     reducers: {
-        subjectFetchStart: (state) => {
-            
-        },
         populateSubjects: (state, action) => {
             console.log(action.payload);
             return action.payload;
         },
-        subjectFetchFail: (state) => {
 
-        },
         updateSubject: (state, action) => {
             if (!action.payload.subject) return;
             let index = state.findIndex((subject) => subject._id === action.payload.subject._id)
@@ -26,9 +20,9 @@ const subjectSlice = createSlice({
 
         },
         updateSubjectQuestion: (state, action) => {
-            const {newSubject} = action.payload
+            const { newSubject } = action.payload
             state.splice(state.findIndex(sub => sub._id === newSubject._id), 1, newSubject);
-        
+
         },
         deleteSubject: (state, action) => {
             state.splice(state.findIndex(subject => subject._id === action.payload.subject._id), 1)
@@ -39,6 +33,11 @@ const subjectSlice = createSlice({
 // export const allSubjects = useSelector((state) => state.subjects);
 
 
-export const { populateSubjects, updateSubject, updateSubjectQuestion, deleteSubject } = subjectSlice.actions;
+export const {
+    populateSubjects,
+    updateSubject,
+    updateSubjectQuestion,
+    deleteSubject
+} = subjectSlice.actions;
 
 export default subjectSlice.reducer;

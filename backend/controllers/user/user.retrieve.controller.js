@@ -18,7 +18,7 @@ export const questions = async (req, res, next) => {
         })
 
         const result = subjs.map((subject) => {
-            subject.questionArray = subject.questionArray.filter((obj) => obj.authors.includes(username))
+            subject.questionArray = subject.questionArray.filter((obj) => obj.authors.find((author) => author.username === username));
 
             return subject.questionArray.length ? subject : null;
 

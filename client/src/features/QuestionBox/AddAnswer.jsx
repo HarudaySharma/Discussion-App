@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewAnswer, emptyAnswersState } from '../../redux/answersSlice';
-import { updateSubjectQuestion } from '../../redux/subjectSlice';
+import { addNewAnswer, emptyAnswersState } from '../../redux/answersSlice.js';
+import { updateSubjectQuestion } from '../../redux/subjectSlice.js';
+
 import DialogBox from '../../components/DialogBox';
 import snackBar from '../../components/snackBar';
+
+
 
 function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
     // console.log("Add answer");
@@ -12,6 +16,7 @@ function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
 
     const { meta, answers } = useSelector(state => state.answers);
     const { currentUser } = useSelector(state => state.user);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     /* NOTE: 
         * I called the async function at unmounting time (return) but the global state answers value was being visible after two re-renders
@@ -63,7 +68,7 @@ function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setDialogOpen(false);
         if (!answer.length) return;
         let ans = answer.trim();
         for (let i = 0; i < answers.length; i++) {
@@ -74,14 +79,15 @@ function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
             }
         }
         for (let i = 0; i < savedAnswers.length; i++) {
-            if (ans === savedAnswers[i].answer && currentUser.username === savedAnswers[i].author) {
+            if (ans === savedAnswers[i].answer && currentUser.username === savedAnswers[i].author.username) {
                 snackBar({ customGray: true, message: "Answer exists", timeout: 2000 })
                 setAnswer('');
                 return;
             }
         }
 
-        dispatch(addNewAnswer(questionId, subjectId, ans, currentUser.username, currentUser._id))
+        dispatch(addNewAnswer(questionId, subjectId, ans, currentUser.username, currentUser.profilePicture, currentUser._id))
+        snackBar({ customGray: true, message: "Answer added" });
         setAnswer('');
 
     }
@@ -89,6 +95,8 @@ function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
     return (
 
         Boolean(currentUser) && <DialogBox
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
             dialogDescription={`Write your answer here. Click submit when you're done.`}
             dialogTitle={'Write an Answer'}
             onSaveChanges={handleSubmit}

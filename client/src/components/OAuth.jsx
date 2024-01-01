@@ -1,11 +1,19 @@
-import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import app from "../firebase.js";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom'
+
+import {
+    GoogleAuthProvider,
+    signInWithPopup,
+    getAuth
+} from "firebase/auth";
+import app from "../firebase.js";
+
+import { useSelector, useDispatch } from "react-redux";
 import { signInFailure, signInStart, signInSuccess } from "../redux/userSlice.js";
+
 import Button from "./Button.jsx";
 import { IoLogoGoogle } from "react-icons/io5";
 import snackBar from "./snackBar.js";
+
 
 const OAuth = ({ className }) => {
     const { loading } = useSelector((state) => state.user)
@@ -59,11 +67,11 @@ const OAuth = ({ className }) => {
         }
     };
     return (
-            <Button inputBtn={false} type="button" value={loading ? 'loading...' : `Proceed with Google`} onClickFnc={handleButtonClick} disabled={loading}
-                className={`${className}`}
-                >
-                {!loading && <IoLogoGoogle className="inline ml-2 mb-[4px]  h-[20px] w-[20px]" />}
-            </Button>
+        <Button inputBtn={false} type="button" value={loading ? 'loading...' : `Proceed with Google`} onClickFnc={handleButtonClick} disabled={loading}
+            className={`${className}`}
+        >
+            {!loading && <IoLogoGoogle className="inline ml-2 mb-[4px]  h-[20px] w-[20px]" />}
+        </Button>
 
     );
 };

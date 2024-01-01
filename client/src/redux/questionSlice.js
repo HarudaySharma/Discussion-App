@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
 
 
 const initialState = {}
@@ -23,7 +22,7 @@ const questionSlice = createSlice({
             }
         },
         deleteQuestionAuthor: (state, action) => {
-            state.question.authors.splice(state.question.authors.findIndex((name) => name === action.payload.author), 1)
+            state.question.authors.splice(state.question.authors.findIndex((author) => author.username === action.payload.author), 1)
         },
         updateQuestion: (state, action) => {
             state.question.question = action.payload.question
@@ -31,7 +30,7 @@ const questionSlice = createSlice({
         addNewAnswers: (state, action) => {
             state.question.answers.push(action.payload.answers);
         },
-        updateAnswers :(state, action) => {
+        updateAnswers: (state, action) => {
             state.question.answers = action.payload.answers;
         },
         removeAnswer: (state, action) => {
@@ -47,6 +46,13 @@ const questionSlice = createSlice({
 
 // export const currentQuestion = useSelector((state) => state.question); 
 
-export const { populateQuestion, deleteQuestionAuthor, updateQuestion, updateAnswers,removeAnswer,  emptyQuestion} = questionSlice.actions;
+export const {
+    populateQuestion,
+    deleteQuestionAuthor,
+    updateQuestion,
+    updateAnswers,
+    removeAnswer,
+    emptyQuestion
+} = questionSlice.actions;
 
 export default questionSlice.reducer;

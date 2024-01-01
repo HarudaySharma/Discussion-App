@@ -6,7 +6,7 @@ function createSubject(name, question, author, answers = []) {
     const Subject = new Subjects(
         {
             name,
-            questionAskers: [author],
+            questionAskers: [author?.username],
             questionArray: [{
                 question,
                 authors: [author],

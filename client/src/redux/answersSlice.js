@@ -18,7 +18,7 @@ const answersSlice = createSlice({
                 state.meta = action.payload.meta;
                 state.answers.push(action.payload.answer);
             },
-            prepare(questionId, subjectId, answer, username, userId) {
+            prepare(questionId, subjectId, answer, username, profilePicture, userId) {
                 return {
                     payload: {
                         meta: {
@@ -28,7 +28,10 @@ const answersSlice = createSlice({
                         },
                         answer: {
                             answer,
-                            author: username,
+                            author: {
+                                username,
+                                profilePicture,
+                            },
                             likes: [],
                         },
                     }
@@ -39,7 +42,7 @@ const answersSlice = createSlice({
         modifyAnswer: (state, action) => {
             let i = state.answers.findIndex((obj) => obj.answer === action.payload.answer);
             state.answers.at(i).answer = action.payload.updatedAnswer
-            
+
         },
         deleteAnswer: (state, action) => {
             state.answers.splice(state.answers.findIndex((obj) => obj.answer === action.payload.answer), 1);
@@ -56,6 +59,12 @@ const answersSlice = createSlice({
     }
 })
 
-export const { addNewAnswer, modifyAnswer, modifyLikeOfAnswer, deleteAnswer, emptyAnswersState } = answersSlice.actions;
+export const {
+    addNewAnswer,
+    modifyAnswer,
+    modifyLikeOfAnswer,
+    deleteAnswer,
+    emptyAnswersState
+} = answersSlice.actions;
 
 export default answersSlice.reducer;

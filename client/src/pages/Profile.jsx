@@ -1,9 +1,10 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react'
-import { InputContainer, Button } from "../components"
-import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/userSlice.js"
-import { signOutUserSuccess } from "../redux/userSlice.js"
+import { useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux'
+import { signOutUserSuccess } from "../redux/userSlice.js"
+import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/userSlice.js"
+
 import {
   getStorage,
   uploadBytesResumable,
@@ -11,13 +12,14 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import app from "../firebase.js";
-import { Navigate, useNavigate } from 'react-router-dom';
+
+import Button from '../components/Button.jsx'
+import  InputContainer from "../components/InputContainer.jsx"
 import UserQuestions from '../features/UserQuestionsBoard/UserQuestions.jsx'
 import QuestionFocus from '../features/QuestionBox/QuestionFocus.jsx'
 import DialogBox from '../components/DialogBox.jsx'
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import AlertDialog from '../components/AlertDialog.jsx'
-
 import snackBar from '../components/snackBar.js'
 
 
@@ -38,6 +40,7 @@ function Profile() {
   const [showPass2, setShowPass2] = useState(false);
   const [passType2, setPassType2] = useState("password");
   const [eyePosition, setEyePosition] = useState("bottom-8")
+  const [dialogOpen, setDialogOpen] = useState(false);
 
 
   const handlePass1Toggle = (e) => {
@@ -164,6 +167,7 @@ function Profile() {
       setUpdateSuccess(true);
       dispatch(updateUserSuccess(data));
       snackBar({ success: true, message: "Account updated Successfully", timeout: "2000" })
+      setDialogOpen(false)
     }
     catch (err) {
       snackBar({ eror: true, message: "Erro Sending request | Check your connection" });
@@ -239,6 +243,8 @@ function Profile() {
 
 
           <DialogBox
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
             dialogDescription={`Edit your profile here. Click save changes when you're done.`}
             dialogTitle={'Profile'}
             onSaveChanges={handleOnSubmit}

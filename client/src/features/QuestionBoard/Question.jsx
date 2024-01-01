@@ -1,6 +1,7 @@
 import React from 'react'
+
 import { useDispatch } from "react-redux";
-import { populateQuestion } from '../../redux/questionSlice'
+import { populateQuestion } from '../../redux/questionSlice.js'
 
 
 const Question = ({ questionObj, meta, index, className }) => {

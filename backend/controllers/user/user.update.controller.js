@@ -13,13 +13,13 @@ export const updateUserCredentials = async (req, res, next) => {
 
     const { username, name, email, password, profilePicture } = req.body;
     try {
-        const oldCred = await Users.findById(req.params.id, { username: 1, _id: 0 })
+        const oldCred = await Users.findById(req.params.id, { username: 1, _id: 0, profilePicture: 1 })
         console.log("oldCred", oldCred);
 
 
-        if (oldCred.username !== username.trim()) {
+        if (oldCred.username !== username.trim() || oldCred.profilePicture !== profilePicture) {
             try {
-                const subjectsUpdated = await updateAuthorNameInSubjects(oldCred.username, username.trim())
+                const subjectsUpdated = await updateAuthorNameInSubjects(oldCred.username, username.trim(), profilePicture)
 
                 if (subjectsUpdated !== true) {
                     res.status(500).json({ message: 'Internal Server Error' });
@@ -76,13 +76,13 @@ export const deleteUser = async (req, res, next) => {
 
 };
 
-const updateAuthorNameInSubjects = async (username, newName) => {
+const updateAuthorNameInSubjects = async (username, newName, profilePicture) => {
     console.log(username, newName)
     try {
         const subjects = await Subjects.find(
             {
                 'questionAskers': username,
-                'questionArray.authors': username
+                'questionArray.authors.username': username
             },
 
         );
@@ -106,8 +106,9 @@ const updateAuthorNameInSubjects = async (username, newName) => {
             if (authorPresent) {
                 subject.questionArray.forEach((question) => {
                     for (let i = 0; i < question.authors.length; i++) {
-                        if (question.authors[i] === username) {
-                            question.authors[i] = newName;
+                        if (question.authors[i].username === username) {
+                            question.authors[i].username = newName;
+                            question.authors[i].profilePicture = profilePicture;
                             break;
                         }
                     }
@@ -118,7 +119,7 @@ const updateAuthorNameInSubjects = async (username, newName) => {
 
         const res = await Subjects.deleteMany({
             'questionAskers': username,
-            'questionArray.authors': username,
+            'questionArray.authors.username': username,
         })
 
         console.log("deleted", res);
@@ -170,7 +171,7 @@ export const updateUserQuestion = async (req, res, next) => {
             {
                 _id: subjectId,
                 'questionArray._id': questionId,
-                'questionArray.authors': username,
+                'questionArray.authors.username': username,
             },
             { 'questionArray.$': 1, "_id": 0, "name": 1 }
         )
@@ -184,7 +185,7 @@ export const updateUserQuestion = async (req, res, next) => {
             return res.status(400).json({ message: "You haven't changed the question" });
 
 
-        questionObj.authors = questionObj.authors.filter(value => value !== username);
+        questionObj.authors = questionObj.authors.filter(author => author.username !== username);
 
         req.body.subjectName = subjectObj.name;
         req.body.answers = subjectObj.questionArray[0].answers.map((obj) => {
@@ -224,7 +225,7 @@ export const updateUserQuestion = async (req, res, next) => {
             {
                 _id: subjectId,
                 'questionArray._id': questionId,
-                'questionArray.authors': username
+                'questionArray.authors.username': username
             },
             {
                 $set: {
@@ -341,6 +342,7 @@ export const deleteUserQuestion = async (req, res, next) => {
             subject.questionArray = removeAuthorFromQuestion(subject.questionArray, questionId, username)
 
             if (!authorInQuestionArray(subject.questionArray, username))
+            
                 subject.questionAskers = subject.questionAskers.filter((value) => value !== username && value !== null);
 
 

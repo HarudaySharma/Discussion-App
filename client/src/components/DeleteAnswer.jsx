@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
+import { deleteAnswer } from '../redux/answersSlice.js'
+import { removeAnswer } from '../redux/questionSlice.js';
+import { updateSubjectQuestion } from '../redux/subjectSlice.js';
+
 import Button from './Button';
-import { deleteAnswer } from '../redux/answersSlice'
-import { removeAnswer } from '../redux/questionSlice';
-import { updateSubject, updateSubjectQuestion } from '../redux/subjectSlice';
 import snackBar from './snackBar.js';
+
 
 function DeleteAnswer({ answer, author, questionId, subjectId, answerId, className }) {
     const dispatch = useDispatch();

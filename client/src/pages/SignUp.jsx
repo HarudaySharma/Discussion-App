@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from 'react'
-import { Link } from 'react-router-dom';
-import { InputContainer, Button } from '../components'
-import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux';
-import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { Link, useNavigate } from 'react-router-dom';
+
+import  InputContainer from '../components/InputContainer'
+import  Button from '../components/Button'
 import snackBar from '../components/snackBar';
+
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+
+
 
 function SignUp() {
   const navigate = useNavigate();

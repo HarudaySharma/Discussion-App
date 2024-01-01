@@ -1,17 +1,20 @@
 import React from 'react'
 
-const AuthorList = ({ authors, className , questionId}) => {
-    
+const AuthorList = ({ authors, className, questionId }) => {
+
     return (
         <ul className={`overflow-scroll textBalance breakWord ${className}`}>
-            {authors.map((author, index) => {
-                return  <li key={ `${author}${questionId}`} className='flex gap-1 bg-gray7 rounded-[14px] p-1'>
-                    <img className="w-4 h-4 rounded-full relative top-1" src='https://firebasestorage.googleapis.com/v0/b/discusssion-app.appspot.com/o/1704098603135komeko.gif?alt=media&token=aec354a5-6328-44c4-95f9-c5b1d61115ad'
+            {authors.map((author) => {
+                return <li
+                    key={`${author.username}${questionId}`}
+                    className='flex gap-1 shadow-[0_1px_4px] outline outline-violet8 tracking-wide bg-gray7 rounded-[16px] px-1 py-1 focus:shadow-[0_0_0_2px] focus:shadow-black'
+                >
+                    <img className="w-4 h-4 rounded-full relative top-1" src={author?.profilePicture}
                     />
                     <p className=''>
-                    {author}{index !== authors.length-1 && ',' } 
+                        {author.username}
                     </p>
-                    </li>
+                </li>
             })}
 
         </ul>

@@ -11,17 +11,25 @@ const SubjectSchema = new mongoose.Schema(
         questionArray: [
             {
                 question: String,
-                authors: [String],
+                authors: [
+                    {
+                        username: String,
+                        profilePicture: String,
+                    }
+                ],
                 answers: [
                     {
                         answer: {
                             type: String,
                             unique: true,
                         },
-                        author: String,
+                        author: {
+                            username: String,
+                            profilePicture: String,
+                        },
                         likes: [],
                     }
-                ]   
+                ]
             }
         ]
     }

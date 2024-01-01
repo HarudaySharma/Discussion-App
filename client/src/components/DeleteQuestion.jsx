@@ -1,14 +1,17 @@
 import React from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
+import { updateSubject, deleteSubject } from '../redux/subjectSlice.js';
+import { emptyQuestion, deleteQuestionAuthor } from '../redux/questionSlice.js';
+
 import Button from './Button';
-import { updateSubject, deleteSubject } from '../redux/subjectSlice';
-import { emptyQuestion, deleteQuestionAuthor } from '../redux/questionSlice';
-import snackBar from './snackBar';
+import snackBar from './snackBar.js';
+
 
 function DeleteQuestion({ authors, questionId, subjectId, className }) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector(state => state.user);
-    const enable = authors?.includes(currentUser?.username);
+    const enable = Boolean(authors?.find((author) => author.username === currentUser?.username));
 
     const handleDelete = async (e) => {
         e.preventDefault();

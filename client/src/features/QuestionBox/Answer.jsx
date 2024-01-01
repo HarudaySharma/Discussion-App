@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux';
-import { modifyLikeOfAnswer, modifyAnswer } from '../../redux/answersSlice';
+import { modifyLikeOfAnswer, modifyAnswer } from '../../redux/answersSlice.js';
+import {  updateSubjectQuestion } from "../../redux/subjectSlice.js"
+
 import DialogBox from '../../components/DialogBox';
 import DeleteAnswer from '../../components/DeleteAnswer';
-import { PersonIcon, HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
-import { updateSubject, updateSubjectQuestion } from "../../redux/subjectSlice"
-import snackBar from '../../components/snackBar';
+import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
+import snackBar from '../../components/snackBar.js';
 
 const Answer = ({ answer, author, likes, meta, className }) => {
   const dispatch = useDispatch();
@@ -19,7 +21,6 @@ const Answer = ({ answer, author, likes, meta, className }) => {
   const { subjectId, questionId, answerId } = meta;
 
 
-  // using liked === null to stop the component from making req to add like on initial render
   // console.log(liked, likeCount, likes.length);
   // useEffect(() => {
   //   console.log("mounted", hasComponentBeenRendered1);
@@ -48,19 +49,19 @@ const Answer = ({ answer, author, likes, meta, className }) => {
           body: JSON.stringify({ like: liked }),
         });
         const data = await res.json();
-        if(!res.ok) {
+        if (!res.ok) {
           if (data?.accessToken === false) {
             snackBar({ error: true, message: "Access Token Expired || Sign In", timeout: "2000" })
             return
           }
-          snackBar({error: true, message: "Error"})          
+          snackBar({ error: true, message: "Error" })
           return;
         }
-        dispatch(updateSubjectQuestion({newSubject: data.subject}));
-        
+        dispatch(updateSubjectQuestion({ newSubject: data.subject }));
+
       }
       catch (err) {
-        snackBar({error: true, message: "Request Error"});
+        snackBar({ error: true, message: "Request Error" });
         console.error(err);
       }
     }
@@ -78,13 +79,13 @@ const Answer = ({ answer, author, likes, meta, className }) => {
     e.preventDefault();
     setDialogOpen(false);
     if (updatedAnswer?.trim() === answer || !updatedAnswer.length) {
-      snackBar({customPurple: true, message: "No changes seen"})
+      snackBar({ customPurple: true, message: "No changes seen" })
       setUpdatedAnswer(answer);
       return;
     }
     if (!answerId) {
       console.log('locally save answer');
-      dispatch(modifyAnswer({ answer, updatedAnswer : updatedAnswer.trim() }))
+      dispatch(modifyAnswer({ answer, updatedAnswer: updatedAnswer.trim() }))
       return;
     }
     try {
@@ -102,7 +103,7 @@ const Answer = ({ answer, author, likes, meta, className }) => {
           snackBar({ error: true, message: "Access Token Expired || Sign In", timeout: "2000" })
           return
         }
-        snackBar({error: true, message: data?.message})
+        snackBar({ error: true, message: data?.message })
         setUpdatedAnswer(answer);
         console.error(res);
         return;
@@ -111,7 +112,7 @@ const Answer = ({ answer, author, likes, meta, className }) => {
       dispatch(updateSubjectQuestion({ newSubject: data }));
     }
     catch (err) {
-      snackBar({error: true, message: "Request Error"})
+      snackBar({ error: true, message: "Request Error" })
       console.error(err);
     }
   }
@@ -127,7 +128,7 @@ const Answer = ({ answer, author, likes, meta, className }) => {
         className={'shadow-[0_2px_12px] shadow-violet11 flex justify-between flex-wrap pl-4 pr-2 py-1 rounded-[8px] outline outline-gray11 '}
       >
         <p
-        className=' max-w-screen-laptop breakWord overflow-scroll'
+          className=' max-w-screen-laptop breakWord overflow-scroll'
         >{updatedAnswer}</p>
         <p onClick={handleLikeClick} className='text-black w-fit hover:cursor-pointer'>
           {liked ? <HeartFilledIcon className='inline-block mx-[1px] ' /> : <HeartIcon className='inline-block mb-[2px] mx-[2px]' />}
@@ -135,13 +136,15 @@ const Answer = ({ answer, author, likes, meta, className }) => {
         </p>
       </section>
       <section className='flex justify-between flex-wrap'>
-        <p
-          className={`outline h-fit outline-violet8 rounded-[12px] px-2 py-1  shadow-[0_1px_4px] leading-none tracking-wide  focus:shadow-[0_0_0_2px] focus:shadow-black`} >
-          <PersonIcon className='inline-flex text-gray11  mx-[1px] mb-1' />
-          {author}
-        </p>
+        <div
+          className={`flex gap-1 outline h-fit outline-violet8 bg-gray7 rounded-[16px] px-2 py-1  shadow-[0_1px_4px]  tracking-wide  focus:shadow-[0_0_0_2px] focus:shadow-black`} >
+          <img className="w-4 h-4 rounded-full relative top-1" src={author?.profilePicture} />
+          <p className=''>
+            {author.username}
+          </p>
+        </div>
         <section className='px-1 self-end flex flex-wrap gap-2  justify-start'>
-          {currentUser?.username === author &&
+          {currentUser?.username === author.username &&
             <DialogBox
               open={dialogOpen}
               onOpenChange={setDialogOpen}
@@ -170,7 +173,7 @@ const Answer = ({ answer, author, likes, meta, className }) => {
           }
           <DeleteAnswer
             answer={answer}
-            author={author}
+            author={author.username}
             subjectId={subjectId}
             questionId={questionId}
             answerId={answerId}
