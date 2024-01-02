@@ -12,6 +12,8 @@ export const updateUserCredentials = async (req, res, next) => {
 
 
     const { username, name, email, password, profilePicture } = req.body;
+    
+
     try {
         const oldCred = await Users.findById(req.params.id, { username: 1, _id: 0, profilePicture: 1 })
         console.log("oldCred", oldCred);
@@ -33,9 +35,8 @@ export const updateUserCredentials = async (req, res, next) => {
             }
         }
 
-
         const hash = password ? hashGenerator(password.trim()) : null;
-
+        
         const updatedUser = await Users.findByIdAndUpdate(req.params.id, {
             username: (username ? username.trim() : oldCred.username),
             name: (name ? name.trim() : oldCred.name),
@@ -57,7 +58,7 @@ export const updateUserCredentials = async (req, res, next) => {
             res.status(500).json({ message: `${Object.keys(error.keyPattern)[0]} already taken` })
             return;
         }
-        res.status(500).json({ "message": "Server errror, not able to update the user" });
+        res.status(500).json({ "message": "Server error, not able to update the user" });
         return;
     }
 }
@@ -250,7 +251,7 @@ export const updateUserQuestion = async (req, res, next) => {
 }
 
 export const updateUserAnswer = async (req, res, next) => {
-    
+
     if (req.params.userId !== req.user._id)
         return next(errorHandler(400, "permission denied: user can only update their wrote answers"));
 
@@ -342,7 +343,7 @@ export const deleteUserQuestion = async (req, res, next) => {
             subject.questionArray = removeAuthorFromQuestion(subject.questionArray, questionId, username)
 
             if (!authorInQuestionArray(subject.questionArray, username))
-            
+
                 subject.questionAskers = subject.questionAskers.filter((value) => value !== username && value !== null);
 
 

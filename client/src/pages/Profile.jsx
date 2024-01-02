@@ -170,7 +170,7 @@ function Profile() {
       setDialogOpen(false)
     }
     catch (err) {
-      snackBar({ eror: true, message: "Erro Sending request | Check your connection" });
+      snackBar({ error: true, message: "Erro Sending request | Check your connection" });
       console.log(err);
       setUpdateSuccess(false);
       dispatch(updateUserFailure(err))
@@ -199,7 +199,7 @@ function Profile() {
     }
 
   }
-
+// console.log(formData)
   return (
     <main className='mx-auto py-4 bg-gray10 max-w-7xl rounded-[12px] gap-4 flex mobile:flex-col  tab:flex-row '>
       <section className='mx-4 mobile:basis-full tab:basis-1/3 flex flex-col items-center'>
@@ -330,7 +330,7 @@ function Profile() {
                 labelAdd={true}
                 labelValue={"new password"}
                 required={false}
-                defaultValue={"bask#78@sd"}
+                defaultValue={""}
                 onChangeFnc={handleOnChange}
                 onFocusFnc={() => setEyePosition("bottom-10")}
                 onBlurFnc={() => setEyePosition('bottom-8')}
@@ -351,7 +351,7 @@ function Profile() {
                 labelAdd={true}
                 labelValue={"re-enter new pass"}
                 required={false}
-                defaultValue={"bask#78@sd"}
+                defaultValue={""}
                 onChangeFnc={handleOnChange}
                 onFocusFnc={() => setEyePosition("bottom-10")}
                 onBlurFnc={() => setEyePosition('bottom-8')}
