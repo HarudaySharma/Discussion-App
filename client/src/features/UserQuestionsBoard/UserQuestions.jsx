@@ -14,20 +14,26 @@ const UserQuestions = ({ className }) => {
     useEffect(() => {
         async function fetchQuestions() {
             try {
-                const res = await fetch(`/server/user/retrieve/questions/${currentUser._id}`)
+                const res = await fetch(`/server/user/retrieve/questions/${currentUser._id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
                 const data = await res.json();
                 if (!res.ok) {
                     if (data?.accessToken === false) {
                         snackBar({ error: true, message: "Access Token Expired || Sign In", timeout: "2000" })
                         return
-                      }
+                    }
                     snackBar({ error: true, message: data.message });
                     console.error(res);
                     return;
                 }
                 dispatch(populateSubjects(data));
                 if (!data?.length) {
-                    snackBar({ customPurple: true, message: "No User Questions Found", timeout: 4000});
+                    snackBar({ customPurple: true, message: "No User Questions Found", timeout: 4000 });
                 }
                 // console.log(data);
             }
