@@ -16,10 +16,12 @@ const QuestionBoard = ({ className }) => {
     async function fetchSubjects() {
       try {
         const res = await fetch('/server/data/all_available/', {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
+          body: JSON.stringify({ 'operation': 'fetch all questions' })
+
         });
 
         const data = await res.json();

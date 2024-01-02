@@ -15,10 +15,12 @@ const UserQuestions = ({ className }) => {
         async function fetchQuestions() {
             try {
                 const res = await fetch(`/server/user/retrieve/questions/${currentUser._id}`, {
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    }
+                    },
+                    body: JSON.stringify({ 'operation': 'fetch user questions' })
+
                 });
                 const data = await res.json();
                 if (!res.ok) {

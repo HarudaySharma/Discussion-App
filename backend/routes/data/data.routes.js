@@ -3,7 +3,7 @@ import { allData } from "../../controllers/data/data.controller.js";
 
 const router = express.Router();
 
-router.get('/all_available', allData);
+router.post('/all_available', allData);
 
 export default router;
 

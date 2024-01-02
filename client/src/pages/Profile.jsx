@@ -181,7 +181,13 @@ function Profile() {
   const handleSignOut = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/auth/sign_out/");
+      const res = await fetch("/server/auth/sign_out/", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({'operation': 'Sign Out'})
+      });
       if (res.status === 200) {
         dispatch(signOutUserSuccess());
         snackBar({ customPurple: true, message: "User Signed Out" })

@@ -4,6 +4,6 @@ import {questions} from "../../controllers/user/user.retrieve.controller.js"
 
 const router = express.Router();
 
-router.get('/questions/:userId', questions);
+router.post('/questions/:userId', questions);
 
 export default router;
