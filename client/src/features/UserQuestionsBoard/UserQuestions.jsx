@@ -20,7 +20,6 @@ const UserQuestions = ({ className }) => {
                         'Content-Type': 'application/json',
                     }
                 });
-                
                 const data = await res.json();
                 if (!res.ok) {
                     if (data?.accessToken === false) {
