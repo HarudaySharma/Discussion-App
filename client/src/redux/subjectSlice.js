@@ -6,8 +6,7 @@ const subjectSlice = createSlice({
     name: "subject",
     initialState,
     reducers: {
-        populateSubjects: (state, action) => {
-            // console.log(action.payload);
+        populateSubjects: (_, action) => {
             return action.payload;
         },
 

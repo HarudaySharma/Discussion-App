@@ -29,7 +29,7 @@ const QuestionBoard = ({ className }) => {
           snackBar({ error: true, message: data.message });
           console.log(res);
         }
-        console.log(res);
+          //console.log(data);
         dispatch(populateSubjects(data));
         if (!data?.length) {
           snackBar({ customPurple: true, message: "No Questions Found", timeout: 4000 })

@@ -12,7 +12,7 @@ import snackBar from './snackBar.js';
 function DeleteAnswer({ answer, author, questionId, subjectId, answerId, className }) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector(state => state.user);
-    const enable = (author === currentUser.username);
+    const enable = (Boolean(currentUser) && author === currentUser.username);
 
     const handleDelete = async (e) => {
         e.preventDefault();

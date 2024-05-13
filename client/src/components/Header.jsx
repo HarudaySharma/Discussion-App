@@ -8,7 +8,7 @@ import logo from '../assets/logo.ico'
 
 export default function Header() {
     const { currentUser } = useSelector((state) => state.user);
-    console.log(currentUser)
+    //console.log(currentUser)
     return (
         <header className="selection:bg-violet6 mb-4 mt-1 rounded-[4px] bg-gray9 outline  outline-violet9  shadow-[0_2px_12px] shadow-violet9 hover:shadow-[0_2px_24px] hover:shadow-violet11 font-mono   flex flex-wrap justify-between items-center max-w-[1440px] mx-auto p-4 md:pointer-events-auto ">
             <Link to="/">

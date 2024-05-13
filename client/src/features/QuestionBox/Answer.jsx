@@ -31,7 +31,7 @@ const Answer = ({ answer, author, likes, meta, className }) => {
 
   useEffect(() => {
     if (!hasComponentBeenRendered1.current) {
-      console.log("initial")
+      //console.log("initial")
       hasComponentBeenRendered1.current = true;
       return;
     }
@@ -130,10 +130,13 @@ const Answer = ({ answer, author, likes, meta, className }) => {
         <p
           className=' max-w-screen-laptop breakWord overflow-scroll'
         >{updatedAnswer}</p>
-        <p onClick={handleLikeClick} className='text-black w-fit hover:cursor-pointer'>
-          {liked ? <HeartFilledIcon className='inline-block mx-[1px] ' /> : <HeartIcon className='inline-block mb-[2px] mx-[2px]' />}
-          {likeCount}
-        </p>
+            {
+              Boolean(currentUser) &&
+              <p onClick={handleLikeClick} className='text-black w-fit hover:cursor-pointer'>
+                    {liked ? <HeartFilledIcon className='inline-block mx-[1px] ' /> : <HeartIcon className='inline-block mb-[2px] mx-[2px]' />}
+                    {likeCount}
+              </p>
+            }
       </section>
       <section className='flex justify-between flex-wrap'>
         <div
