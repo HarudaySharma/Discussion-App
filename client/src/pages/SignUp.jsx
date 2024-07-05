@@ -7,6 +7,7 @@ import snackBar from '../components/snackBar';
 
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function SignUp() {
@@ -31,12 +32,13 @@ function SignUp() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("/server/auth/sign_up", {
+      const res = await fetch(`${API_URL}/server/auth/sign_up`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
       });
 
       if (!res.ok) {

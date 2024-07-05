@@ -7,6 +7,7 @@ import { emptyQuestion, deleteQuestionAuthor } from '../redux/questionSlice.js';
 import Button from './Button';
 import snackBar from './snackBar.js';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 function DeleteQuestion({ authors, questionId, subjectId, className }) {
     const dispatch = useDispatch();
@@ -16,9 +17,11 @@ function DeleteQuestion({ authors, questionId, subjectId, className }) {
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`/server/user/update/question/${subjectId}/${questionId}/${currentUser._id}`, {
-                method: 'DELETE'
-            })
+            const res = await fetch(`${API_URL}/server/user/update/question/${subjectId}/${questionId}/${currentUser._id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            }
+)
             const data = await res.json()
 
             if (!res.ok) {

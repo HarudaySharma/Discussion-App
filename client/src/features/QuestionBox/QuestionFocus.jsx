@@ -11,6 +11,7 @@ import DeleteQuestion from '../../components/DeleteQuestion';
 import DialogBox from '../../components/DialogBox';
 import snackBar from '../../components/snackBar.js';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 const QuestionFocus = ({ className }) => {
@@ -36,12 +37,13 @@ const QuestionFocus = ({ className }) => {
         }
 
         try {
-            const res = await fetch(`/server/user/update/question/${subject.subjectId}/${question._id}/${currentUser._id}`, {
+            const res = await fetch(`${API_URL}/server/user/update/question/${subject.subjectId}/${question._id}/${currentUser._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ question: updatedQuestion.trim(), username: currentUser.username })
+                body: JSON.stringify({ question: updatedQuestion.trim(), username: currentUser.username }),
+                credentials: 'include',
             })
 
             const data = await res.json();

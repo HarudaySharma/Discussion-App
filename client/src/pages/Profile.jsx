@@ -22,6 +22,8 @@ import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import AlertDialog from '../components/AlertDialog.jsx'
 import snackBar from '../components/snackBar.js'
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 function Profile() {
   const fileRef = useRef(null);
@@ -106,8 +108,9 @@ function Profile() {
 
   const handleAccountDelete = async (e) => {
     try {
-      const res = await fetch(`/server/user/update/delete/${currentUser._id}`, {
+      const res = await fetch(`${API_URL}/server/user/update/delete/${currentUser._id}`, {
         method: 'DELETE',
+        credentials: 'include',
       })
       const data = await res.json();
       if (!res.ok) {
@@ -141,12 +144,13 @@ function Profile() {
     try {
       dispatch(updateUserStart());
 
-      const res = await fetch(`/server/user/update/cred/${currentUser._id}`, {
+      const res = await fetch(`${API_URL}/server/user/update/cred/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        credentials: 'include',
       })
 
       const data = await res.json();
@@ -181,12 +185,13 @@ function Profile() {
   const handleSignOut = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/server/auth/sign_out/", {
+      const res = await fetch(`${API_URL}/server/auth/sign_out/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({'operation': 'Sign Out'})
+        body: JSON.stringify({'operation': 'Sign Out'}),
+        credentials: 'include',
       });
       if (res.status === 200) {
         dispatch(signOutUserSuccess());

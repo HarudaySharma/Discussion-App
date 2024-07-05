@@ -7,6 +7,8 @@ import Subject from '../QuestionBoard/Subject.jsx';
 import * as Accordion from '@radix-ui/react-accordion';
 import snackBar from "../../components/snackBar.js";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const UserQuestions = ({ className }) => {
     const dispatch = useDispatch();
@@ -14,12 +16,13 @@ const UserQuestions = ({ className }) => {
     useEffect(() => {
         async function fetchQuestions() {
             try {
-                const res = await fetch(`/server/user/retrieve/questions/${currentUser._id}`, {
+                const res = await fetch(`${API_URL}/server/user/retrieve/questions/${currentUser._id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ 'operation': 'fetch user questions' })
+                    body: JSON.stringify({ 'operation': 'fetch user questions' }),
+                    credentials: 'include',
 
                 });
                 const data = await res.json();

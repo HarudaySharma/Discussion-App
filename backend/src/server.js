@@ -1,12 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from 'cors';
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user/user.routes.js"
 import authRoutes from "./routes/auth/auth.route.js"
 import dataRoutes from './routes/data/data.routes.js'
-
-import path from 'path';
 
 //connecting to the db
 dotenv.config();
@@ -18,28 +17,31 @@ mongoose.connect(process.env.MONGO)
         console.log("database not connected", error);
     })
 
-const __dirname = path.resolve();
-
-
 // starting the app 
 const app = express();
 const PORT = 3000;
-
-
-app.use(express.static(path.join(__dirname, 'client/dist')));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-})
-
 
 app.listen(PORT, () => {
     console.log("server listening on port: 3000");
 })
 
-
 app.use(express.json());
 app.use(cookieParser())
+
+app.use(cors({
+    credentials: true,
+    origin: `${process.env.WEB_CLIENT_URL}`,
+    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'], // Include allowed headers
+}));
+
+// middleware to handle preflight requests
+app.options('*', cors({
+    credentials: true,
+    origin: `${process.env.WEB_CLIENT_URL}`,
+    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 
 // middleware functions for user and auth routes

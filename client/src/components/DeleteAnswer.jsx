@@ -8,6 +8,8 @@ import { updateSubjectQuestion } from '../redux/subjectSlice.js';
 import Button from './Button';
 import snackBar from './snackBar.js';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 function DeleteAnswer({ answer, author, questionId, subjectId, answerId, className }) {
     const dispatch = useDispatch();
@@ -22,8 +24,9 @@ function DeleteAnswer({ answer, author, questionId, subjectId, answerId, classNa
             return;
         }
         try {
-            const res = await fetch(`/server/user/update/answer/${subjectId}/${questionId}/${answerId}/${currentUser._id}`, {
-                method: 'DELETE'
+            const res = await fetch(`${API_URL}/server/user/update/answer/${subjectId}/${questionId}/${answerId}/${currentUser._id}`, {
+                method: 'DELETE',
+                credentials: 'include',
             })
             const data = await res.json()
             if (!res.ok) {

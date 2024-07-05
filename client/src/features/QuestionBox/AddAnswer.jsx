@@ -7,7 +7,7 @@ import { updateSubjectQuestion } from '../../redux/subjectSlice.js';
 import DialogBox from '../../components/DialogBox';
 import snackBar from '../../components/snackBar';
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
     // console.log("Add answer");
@@ -36,12 +36,13 @@ function AddAnswer({ subjectId, questionId, savedAnswers, className }) {
             try {
 
                 dispatch(emptyAnswersState());
-                const res = await fetch(`/server/user/annexing/new_answer/${meta.subjectId}/${meta.questionId}/${meta.userId}`, {
+                const res = await fetch(`${API_URL}/server/user/annexing/new_answer/${meta.subjectId}/${meta.questionId}/${meta.userId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ answers }),
+                    credentials: 'include',
                 })
                 const data = await res.json();
                 if (!res.ok) {

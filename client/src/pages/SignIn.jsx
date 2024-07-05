@@ -12,6 +12,7 @@ import snackBar from "../components/snackBar.js";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function SignIn() {
@@ -38,12 +39,13 @@ function SignIn() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch('/server/auth/sign_in', {
+      const res = await fetch(`${API_URL}/server/auth/sign_in`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        credentials: 'include',
       })
       if (!res.ok) {
         const data = await res.json();

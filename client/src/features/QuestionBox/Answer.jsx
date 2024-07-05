@@ -9,6 +9,9 @@ import DeleteAnswer from '../../components/DeleteAnswer';
 import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
 import snackBar from '../../components/snackBar.js';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 const Answer = ({ answer, author, likes, meta, className }) => {
   const dispatch = useDispatch();
   const hasComponentBeenRendered1 = useRef(false);
@@ -41,12 +44,13 @@ const Answer = ({ answer, author, likes, meta, className }) => {
     }
     async function updateLike() {
       try {
-        const res = await fetch(`/server/user/annexing/answer_update_like/${subjectId}/${questionId}/${answerId}/${currentUser._id}`, {
+        const res = await fetch(`${API_URL}/server/user/annexing/answer_update_like/${subjectId}/${questionId}/${answerId}/${currentUser._id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ like: liked }),
+          credentials: 'include',
         });
         const data = await res.json();
         if (!res.ok) {
@@ -89,12 +93,13 @@ const Answer = ({ answer, author, likes, meta, className }) => {
       return;
     }
     try {
-      const res = await fetch(`/server/user/update/answer/${subjectId}/${questionId}/${answerId}/${currentUser._id}`, {
+      const res = await fetch(`${API_URL}/server/user/update/answer/${subjectId}/${questionId}/${answerId}/${currentUser._id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ answer: updatedAnswer.trim() }),
+        credentials: 'include',
       })
 
       const data = await res.json();

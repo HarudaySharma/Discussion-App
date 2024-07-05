@@ -7,6 +7,8 @@ import Subject from './Subject.jsx';
 import * as Accordion from '@radix-ui/react-accordion';
 import snackBar from "../../components/snackBar.js"
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const QuestionBoard = ({ className }) => {
   const dispatch = useDispatch();
@@ -15,13 +17,13 @@ const QuestionBoard = ({ className }) => {
 
     async function fetchSubjects() {
       try {
-        const res = await fetch('/server/data/all_available/', {
+        const res = await fetch(`${API_URL}/server/data/all_available/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ 'operation': 'fetch all questions' })
-
+          body: JSON.stringify({ 'operation': 'fetch all questions' }),
+          credentials: 'include',
         });
 
         const data = await res.json();

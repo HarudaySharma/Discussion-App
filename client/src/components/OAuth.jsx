@@ -14,6 +14,8 @@ import Button from "./Button.jsx";
 import { IoLogoGoogle } from "react-icons/io5";
 import snackBar from "./snackBar.js";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const OAuth = ({ className }) => {
     const { loading } = useSelector((state) => state.user)
@@ -31,7 +33,7 @@ const OAuth = ({ className }) => {
             const result = await signInWithPopup(auth, provider);
             console.log(result);
             try {
-                const res = await fetch("/server/auth/sign_in/google", {
+                const res = await fetch(`${API_URL}/server/auth/sign_in/google`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -41,6 +43,7 @@ const OAuth = ({ className }) => {
                         email: result.user.email,
                         profilePicture: result.user.photoURL,
                     }),
+                    credentials: 'include',
                 });
                 if (!res.ok) {
                     const data = await res.json();

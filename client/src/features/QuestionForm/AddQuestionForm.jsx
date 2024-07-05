@@ -10,7 +10,7 @@ import DialogBox from '../../components/DialogBox'
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import snackBar from '../../components/snackBar.js'
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function AddQuestionForm({ className }) {
@@ -51,12 +51,13 @@ function AddQuestionForm({ className }) {
 
         try {
             console.log(formData);
-            const res = await fetch(`/server/user/annexing/question/${currentUser._id}`, {
+            const res = await fetch(`${API_URL}/server/user/annexing/question/${currentUser._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials: 'include',
             })
             const data = await res.json();
             if (!res.ok) {
