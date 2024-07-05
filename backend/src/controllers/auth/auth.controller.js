@@ -13,7 +13,7 @@ export const test = (req, res, next) => {
 
 
 export const SignUp = async (req, res, next) => {
-    
+
     const { username, name, email, password } = req.body;
 
     const hash = hashGenerator(password);
@@ -49,7 +49,7 @@ export const SignIn = async (req, res, next) => {
                 User = await Users.findOne({ username });
             } catch (err) {
                 console.log(err);
-                res.status(500).json({message: "User not found"});
+                res.status(500).json({ message: "User not found" });
                 return;
             }
         }
@@ -58,7 +58,7 @@ export const SignIn = async (req, res, next) => {
                 User = await Users.findOne({ email });
             } catch (err) {
                 console.log(err);
-                res.status(500).json({message: "User not Found"});
+                res.status(500).json({ message: "User not Found" });
                 return;
             }
         }
@@ -75,7 +75,11 @@ export const SignIn = async (req, res, next) => {
         const { password: notInclude, ...responseObj } = User._doc;
 
         res
-            .cookie('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 2 })
+            .cookie('access_token', token, {
+                maxAge: 1000 * 60 * 60 * 2,
+                secure: true,
+                sameSite: 'none',
+            })
             .status(200).json(responseObj);
 
     } catch (err) {
@@ -92,7 +96,11 @@ export const googleSignIn = async (req, res, next) => {
             const token = generateToken(user._id);
             const { password, ...responseObj } = user._doc;
             res
-                .cookie('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 2 })
+                .cookie('access_token', token, {
+                    maxAge: 1000 * 60 * 60 * 2,
+                    secure: true,
+                    sameSite: 'none',
+                })
                 .status(200)
                 .json(responseObj);
             return;
@@ -112,7 +120,11 @@ export const googleSignIn = async (req, res, next) => {
             const token = generateToken(newUser._id);
             const { password, ...responseObj } = newUser._doc;
             res
-                .cookie('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 2 })
+                .cookie('access_token', token, {
+                    maxAge: 1000 * 60 * 60 * 2,
+                    secure: true,
+                    sameSite: 'none',
+                })
                 .status(200)
                 .json(responseObj);
             return;
